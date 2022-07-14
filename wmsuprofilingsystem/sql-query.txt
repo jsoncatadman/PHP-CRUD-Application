@@ -1,0 +1,110 @@
+CREATE DATABASE wmsudirectoryDB;
+
+CREATE TABLE tblAcademicRank (
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(255) NOT NULL
+);
+
+INSERT INTO tblAcademicRank (Description)
+VALUES ('Instructor I'), ('Instructor II'), ('Instructor III'), ('Assistant Professor I'), ('Assistant Professor II'), ('Assistant Professor III'), ('Assistant Professor IV'), ('Associate Professor I'), ('Associate Professor II'), ('Associate Professor IV'), ('Associate Professor IV'), ('Associate Professor V'), ('Professor I'), ('Professor II'), ('Professor III'), ('Professor IV'), ('Professor V'), ('Professor VI');
+
+
+CREATE TABLE tblCollege (
+	id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL
+);
+
+INSERT INTO tblCollege (code, description)
+VALUE
+('COAgri', 'College of Agriculture'),
+('COArchi', 'College of Architecture'),
+('CAIS', 'College of Asian and Islamic Studies'),
+('CCH', 'College of Communication and Humanities'),
+('CCS', 'College of Computing Studies'),
+('CCJE', 'College of Criminal Justice Education'),
+('COE', 'College of Engineering'),
+('CFES', 'College of Forestry and Environmental Studies'),
+('CHE', 'College of Home Economics'),
+('CL', 'College of Law'),
+('CLA', 'College of Liberal Arts'),
+('CN', 'College of Nursing'),
+('CPADS', 'College of Public Administration and Development Studies'),
+('CSSPE', 'College of Sports Science and Physical Education'),
+('CSM', 'College of Science and Mathematics'),
+('CSS', 'College of Social Sciences'),
+('CSWCD', 'College of Social Work and Community Development'),
+('CTE', 'College of Teacher Education');
+
+
+CREATE TABLE tblDepartment (
+	id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(255) NOT NULL,
+    colID_fk INTEGER,
+    CONSTRAINT FOREIGN KEY (colID_fk)
+	REFERENCES tblCollege(id)
+);
+
+INSERT INTO tblDepartment (Description, colID_fk)
+VALUES ('Computer Science Department', '5'), ('Information Technology Department', '5');
+
+INSERT INTO tblDepartment (Description, colID_fk)
+VALUES 
+('Computer Engineering Department', '7'), 
+('Mechanical Engineering Department', '7'), 
+('Civil Engineering Department', '7'), 
+('Geodetic Engineering Department', '7'), 
+('Electrical Engineering Department', '7');
+
+
+CREATE TABLE tblFaculty (
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    emp_no INTEGER(11) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email_address VARCHAR(255) NOT NULL,
+    mobile_number VARCHAR(255) NOT NULL,
+    undergrad_course VARCHAR(255) NOT NULL,
+    masters_degree VARCHAR(255) NOT NULL,
+    doctorate_degree VARCHAR(255) NOT NULL,
+    academic_rankID INTEGER,
+    departmentID INTEGER,
+    collegeID INTEGER,
+    CONSTRAINT FOREIGN KEY (academic_rankID)
+    REFERENCES tblAcademicRank(id),
+    CONSTRAINT FOREIGN KEY (departmentID)
+    REFERENCES tblDepartment(id),
+    CONSTRAINT FOREIGN KEY (collegeID)
+    REFERENCES tblCollege(id)
+);
+
+INSERT INTO tblFaculty (emp_no, first_name, last_name, email_address, mobile_number, undergrad_course, masters_degree, doctorate_degree, academic_rankID, departmentID, collegeID)
+VALUES 
+("400130", "Arip", "Edwin", "edwin.arip@wmsu.edu.ph", "09098987675", "N/A", "N/A", "N/A", "6", "2", "1"),
+("430130", "Arip", "Jhon Paul", "jhon.arip@wmsu.edu.ph", "09098987675", "N/A", "N/A", "N/A", "1", "1", "1"),
+("456930", "Ballaho", "Jaydee", "jaydee.ballaho@wmsu.edu.ph", "09876765456", "N/A", "N/A", "N/A", "1", "2", "1"),
+("427817", "Catadman", "Jason", "jason.catadman@wmsu.edu.ph", "09092617288", "N/A", "N/A", "N/A", "1", "1", "1"),
+("417892", "Gregana", "Pauleen Jean", "pauleen.gregana@wmsu.edu.ph", "09656710987", "N/A", "N/A", "N/A", "4", "2", "1"),
+("420987", "Tahil", "Salimar", "tahil.salimar@wmsu.edu.ph", "09273987641", "N/A", "N/A", "N/A", "4", "2", "1");
+
+
+SELECT dir.id, dir.emp_no, dir.first_name, dir.last_name, dir.email_address, dir.mobile_number, acad.Description AS Rank, dept.Description AS Department, coll.Description as College, dir.undergrad_course, dir.masters_degree, dir.doctorate_degree
+FROM tblDirectory AS dir 
+INNER JOIN tblAcademicRank AS acad ON dir.academic_rankID = acad.id 
+INNER JOIN tblCollege AS coll ON dir.collegeID = coll.id 
+INNER JOIN tblDepartment AS dept ON dir.departmentID = dept.id;
+
+
+CREATE TABLE tblUserAccount (
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    user_type VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+INSERT INTO tblUserAccount (first_name, last_name, user_type, username, password)
+VALUES 
+("Jason", "Catadman", "Super Admin", "super", "super"),
+("Elvin", "Aquiatan", "Admin", "admin", "admin");
